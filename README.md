@@ -2,6 +2,12 @@
 
 A modern CV/Resume builder built with React and TypeScript. Created as an academic project with AI-powered features.
 
+## 🚀 Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/DecoderX108/resumate)
+
+**[→ See Quick Deployment Guide](./QUICK_DEPLOY.md)** | **[→ Detailed Setup](./VERCEL_DEPLOYMENT.md)**
+
 ## About This Project
 
 This is a student project for learning purposes. Feel free to use it for your own resumes!

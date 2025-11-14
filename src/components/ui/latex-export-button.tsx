@@ -11,7 +11,7 @@ interface LaTeXExportButtonProps {
 export function LaTeXExportButton({ className }: LaTeXExportButtonProps) {
   const { state } = useCVContext();
   const [isExporting, setIsExporting] = useState(false);
-  const [latexTemplate, setLatexTemplate] = useState('modern');
+  const [latexTemplate] = useState('modern');
 
   const handleLatexExport = async () => {
     if (!state.personalInfo.firstName || !state.personalInfo.lastName) {

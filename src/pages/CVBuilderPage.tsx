@@ -95,7 +95,8 @@ export default function CVBuilderPage() {
   });
   
   // Get build mode from sessionStorage
-  const buildMode = sessionStorage.getItem('buildMode') || 'scratch';
+  // Build mode tracking
+  // const buildMode = sessionStorage.getItem('buildMode') || 'scratch';
   
   // Live preview interaction states
   const [isPreviewHovered, setIsPreviewHovered] = useState(false);
