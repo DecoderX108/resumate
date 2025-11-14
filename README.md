@@ -36,12 +36,11 @@ All templates support:
 
 ### 🤖 **AI-Powered Content Generation**
 
-- **Google Gemini AI Integration**: Smart content suggestions powered by Gemini
+- **OpenRouter API Integration**: Smart content suggestions powered by Meta Llama 3.1 8B
 - **Position-Specific Content**: Generates role-tailored professional content
-- **Interactive Chat Interface**: Guided questions for personalized content
 - **Industry-Aware**: Adapts language and focus for different industries
 - **Experience-Level Appropriate**: Content for entry-level to executive roles
-- **Fallback Support**: Template-based generation when AI unavailable
+- **Optional Feature**: App works fully without AI configuration
 
 ### 📝 **Comprehensive CV Sections**
 
@@ -74,7 +73,8 @@ All templates support:
 
 ### AI Integration
 
-- **Ollama** - Local LLM server for AI content generation
+- **OpenRouter API** - AI content generation service
+- **Meta Llama 3.1 8B** - Language model for generating professional content
 - **Axios** - HTTP client for API communication
 
 ### Export & PDF
@@ -107,62 +107,50 @@ All templates support:
 4. **Open your browser:**
    Navigate to `http://localhost:5174`
 
-## 🤖 AI Integration Setup (Ollama)
+## 🤖 AI Integration Setup (OpenRouter)
 
-Resumate uses Ollama for local AI-powered content generation. This provides privacy and cost benefits compared to cloud-based APIs.
+Resumate uses OpenRouter API for AI-powered content generation with Meta Llama 3.1 8B model.
 
-### Step 1: Install Ollama
+### Step 1: Get OpenRouter API Key
 
-1. Visit [ollama.com](https://ollama.com) and download Ollama for your operating system
-2. Install Ollama following the platform-specific instructions
+1. Visit [OpenRouter.ai](https://openrouter.ai)
+2. Create an account or sign in
+3. Navigate to API Keys section
+4. Generate a new API key
 
-### Step 2: Start Ollama Service
+### Step 2: Configure API Key
 
-```bash
-ollama serve
-```
-
-The service will start on `http://localhost:11434`
-
-### Step 3: Install a Language Model
-
-Install a language model (we recommend Llama 3.1):
+Create a `.env.local` file in the project root:
 
 ```bash
-ollama pull llama3.1
+VITE_GEMINI_API_KEY=your_openrouter_api_key_here
 ```
 
-You can also use other models:
+### Step 3: Verify Setup
 
-```bash
-ollama pull llama3.2
-ollama pull mistral
-ollama pull codellama
-```
+1. Restart the development server
+2. Open Resumate in your browser
+3. Try using any AI feature (e.g., Generate Summary)
+4. If configured correctly, AI features will work seamlessly
 
-### Step 4: Verify Setup
+### AI Model Information
 
-1. Open Resumate in your browser
-2. Click on any "AI Generate" button in the CV builder
-3. The app will show an Ollama status indicator in the chat interface
-4. If properly configured, you should see "AI Ready" status
+- **Provider**: OpenRouter
+- **Model**: meta-llama/llama-3.1-8b-instruct:free
+- **Features**: Free tier available for testing and development
 
 ### Troubleshooting AI Setup
 
-**Ollama Not Available:**
+**API Key Not Working:**
 
-- Ensure Ollama service is running: `ollama serve`
-- Check if the service is accessible at `http://localhost:11434`
+- Verify the API key is correctly copied
+- Check `.env.local` file is in the root directory
+- Restart the development server after adding the key
 
-**No Models Installed:**
+**AI Features Not Available:**
 
-- Install at least one model: `ollama pull llama3.1`
-- Check available models: `ollama list`
-
-**Connection Issues:**
-
-- Verify firewall settings allow localhost connections
-- Restart Ollama service if needed
+- The app works without AI - you can still create CVs manually
+- AI features are optional enhancements
 
 ## 📝 How to Use
 
@@ -183,11 +171,11 @@ ollama pull codellama
    - Include education background
    - List skills and achievements
 
-4. **AI Assistance**:
+4. **AI Assistance** (Optional):
 
-   - Use AI chat for position-specific content
-   - Answer guided questions for personalized results
+   - Configure OpenRouter API key for AI features
    - Generate professional summaries and descriptions
+   - Get role-specific content suggestions
 
 5. **Preview & Edit**:
 
