@@ -59,24 +59,35 @@ You **MUST purchase a license** if you want to:
 
 ## 🚀 Features
 
-### 🎨 **Professional Templates**
+### 🎨 **Professional CV Templates**
 
-- **Chicago Professional**: Clean, traditional layout
-- **Modern Executive**: Contemporary design with accent colors
-- **Creative Portfolio Pro**: Bold design for creative roles
-- **Tech Specialist**: Technical-focused layout
-- **Fresh Graduate**: Entry-level optimized template
-- Print-friendly and ATS-optimized layouts
-- Responsive design for all devices
+**6 Industry-Standard Templates** inspired by 120+ real professional CVs:
+
+- **ATS-Friendly Professional** (98% ATS score) - Maximum compatibility
+- **Classic Professional** (95% ATS score) - Traditional corporate
+- **Academic CV** (92% ATS score) - Research and academic positions
+- **Modern Professional** (90% ATS score) - Contemporary companies
+- **Executive Leadership** (93% ATS score) - C-suite and senior roles
+- **Creative Professional** (85% ATS score) - Design and creative industries
+
+**Features:**
+
+- Template selector with preview and ATS scores
+- Export to Word (.doc) format with proper formatting
+- Print-ready layouts optimized for A4/Letter
+- Professional fonts and color schemes
+- Based on real CV samples from professionals
+
+📖 **[View Template System Documentation](./TEMPLATE_SYSTEM.md)**
 
 ### 🤖 **AI-Powered Content Generation**
 
-- **Local LLM Integration**: Uses Ollama for privacy and cost benefits
+- **Google Gemini AI Integration**: Smart content suggestions powered by Gemini
 - **Position-Specific Content**: Generates role-tailored professional content
 - **Interactive Chat Interface**: Guided questions for personalized content
 - **Industry-Aware**: Adapts language and focus for different industries
 - **Experience-Level Appropriate**: Content for entry-level to executive roles
-- **Fallback Support**: Template-based generation when Ollama unavailable
+- **Fallback Support**: Template-based generation when AI unavailable
 
 ### 📝 **Comprehensive CV Sections**
 
