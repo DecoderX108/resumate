@@ -43,8 +43,9 @@ import {
   Bot
 } from 'lucide-react';
 import { useCVContext } from '@/context/CVContext';
-import { exportToWord } from '@/utils/exportUtils';
+import { exportToWord, type TemplateStyle } from '@/utils/exportUtils';
 import { LaTeXExportButton } from '@/components/ui/latex-export-button';
+import { ExportDialog } from '@/components/ui/export-dialog';
 import { AIProfessionalSummary } from '@/components/ui/ai-professional-summary';
 import { generateAIContent, validateCVContent } from '@/utils/aiUtils';
 import type { AIValidationResult, AIGenerationOptions } from '@/utils/aiUtils';
@@ -83,6 +84,7 @@ export default function CVBuilderPage() {
   const [validationResult, setValidationResult] = useState<AIValidationResult | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateStyle>('ats-friendly');
   
   // Live preview interaction states
   const [isPreviewHovered, setIsPreviewHovered] = useState(false);
@@ -600,8 +602,7 @@ export default function CVBuilderPage() {
   const handleExportToWord = async () => {
     setIsExporting(true);
     try {
-      await exportToWord(state);
-
+      await exportToWord(state, { templateStyle: selectedTemplate });
     } catch (error) {
       console.error('Word export failed:', error);
     } finally {
@@ -2549,19 +2550,16 @@ export default function CVBuilderPage() {
               {/* LaTeX PDF Export */}
               <LaTeXExportButton className="w-full sm:w-auto" />
               
-              <Button 
-                onClick={handleExportToWord} 
-                variant="outline"
-                disabled={isExporting}
+              {/* Word Export with Template Selection */}
+              <ExportDialog
+                selectedTemplate={selectedTemplate}
+                onSelectTemplate={setSelectedTemplate}
+                onExport={handleExportToWord}
+                isExporting={isExporting}
+                buttonText="Export Word"
+                buttonVariant="outline"
                 className="w-full sm:w-auto gradient-card hover:gradient-primary hover:text-white border-purple-200 hover:border-transparent transition-all duration-300 group"
-              >
-                {isExporting ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin group-hover:text-white" />
-                ) : (
-                  <FileText className="h-4 w-4 mr-2 group-hover:text-white" />
-                )}
-                Export Word
-              </Button>
+              />
             </div>
           </div>
         </div>
