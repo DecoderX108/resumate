@@ -9,6 +9,13 @@ This is a student project for learning purposes. Feel free to use it for your ow
 📧 Contact: etherjoon@gmail.com  
 🔗 GitHub: https://github.com/DecoderX108/resumate
 
+## Contributors
+
+- **Prasanna Sen Thakuri**
+- **Sudin Bohara**
+- **Samyog Rajbhandari**
+- **Yujal Thapa**
+
 ---
 
 ## Features
