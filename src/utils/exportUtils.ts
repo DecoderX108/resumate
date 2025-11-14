@@ -3,7 +3,7 @@ import type { CVState } from '@/context/CVContext';
 import LaTeXService from './latexService';
 import type { LaTeXFormattingRequest } from './latexService';
 import { saveAs } from 'file-saver';
-import { generateCVHTML, type TemplateStyle, CV_TEMPLATES } from './cvTemplates';
+import { generateCVHTML, type TemplateStyle } from './cvTemplates';
 
 export interface ExportOptions {
   fileName?: string;
