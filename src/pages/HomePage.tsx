@@ -17,7 +17,7 @@ export default function HomePage() {
             and instant PDF export. Stand out from the crowd with Resumate.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-in-right delay-500">
-            <Link to="/builder">
+            <Link to="/start">
               <Button size="lg" className="text-lg px-8 py-6 hover:scale-105 hover:shadow-lg transition-all duration-300 group">
                 Start Building <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -94,7 +94,7 @@ export default function HomePage() {
             Join thousands of professionals who have successfully created 
             outstanding resumes with Resumate.
           </p>
-          <Link to="/builder">
+          <Link to="/start">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6 hover:scale-110 hover:shadow-lg transition-all duration-300 animate-bounce-in delay-400 group">
               Get Started for Free <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
             </Button>

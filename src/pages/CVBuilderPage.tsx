@@ -84,7 +84,15 @@ export default function CVBuilderPage() {
   const [validationResult, setValidationResult] = useState<AIValidationResult | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateStyle>('ats-friendly');
+  
+  // Get template from sessionStorage or default to ats-friendly
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateStyle>(() => {
+    const savedTemplate = sessionStorage.getItem('selectedTemplate') as TemplateStyle;
+    return savedTemplate || 'ats-friendly';
+  });
+  
+  // Get build mode from sessionStorage
+  const buildMode = sessionStorage.getItem('buildMode') || 'scratch';
   
   // Live preview interaction states
   const [isPreviewHovered, setIsPreviewHovered] = useState(false);

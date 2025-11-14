@@ -17,6 +17,7 @@ import { CVProvider } from '@/context/CVContext';
 import { AuthProvider } from '@/context/AuthContext';
 import HomePage from '@/pages/HomePage';
 import TemplatesPage from '@/pages/TemplatesPage';
+import CVStartPage from '@/pages/CVStartPage';
 import CVBuilderPage from '@/pages/CVBuilderPage';
 import SignupPage from '@/pages/SignupPage';
 import LoginPage from '@/pages/LoginPage';
@@ -36,6 +37,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/templates" element={<TemplatesPage />} />
+                <Route path="/start" element={<CVStartPage />} />
                 <Route path="/builder" element={<CVBuilderPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/login" element={<LoginPage />} />
