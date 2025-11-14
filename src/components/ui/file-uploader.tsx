@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Upload, FileText, Image, File, AlertCircle, Loader2, X } from 'lucide-react';
 import { Button } from './button';
 import { Card, CardContent } from './card';
@@ -247,3 +247,4 @@ export function FileUploader({ onFileAnalyzed, className }: FileUploaderProps) {
 }
 
 export const CVUploader = FileUploader;
+

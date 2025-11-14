@@ -522,3 +522,4 @@ export function CVAnalysisResults({ analysisData, onImproveCV, onUploadNew }: CV
     </div>
   );
 }
+

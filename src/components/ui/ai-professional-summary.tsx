@@ -44,13 +44,19 @@ export function AIProfessionalSummary() {
       if (result.success) {
         setGeneratedSummary(result.summary);
         setSuggestions(result.suggestions || []);
+        // Auto-apply to the form
+        dispatch({
+          type: 'UPDATE_PERSONAL_INFO',
+          payload: { summary: result.summary }
+        });
       } else {
         console.error('AI Summary generation failed:', result.summary);
-        alert(`Failed to generate AI summary: ${result.summary}`);
+        alert(result.summary); // Show only the actual error message
       }
     } catch (error) {
       console.error('Error generating summary:', error);
-      alert(`Failed to generate AI summary. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred';
+      alert(`Failed to generate AI summary: ${errorMsg}. Please check your Gemini API key configuration.`);
     } finally {
       setIsGenerating(false);
     }

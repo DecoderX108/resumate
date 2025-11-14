@@ -69,10 +69,18 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       return countryValue;
     };
     
+    // Sort country codes by length (longest first) to match longer codes first
+    const sortedCodes = [...countryCodes].sort((a, b) => {
+      const aCode = getActualPhoneCode(a.value);
+      const bCode = getActualPhoneCode(b.value);
+      return bCode.length - aCode.length;
+    });
+    
     // Find matching country code by checking the actual phone number prefix
-    for (const country of countryCodes) {
+    for (const country of sortedCodes) {
       const actualCode = getActualPhoneCode(country.value);
-      if (trimmed.startsWith(actualCode)) {
+      // Check if the phone number starts with this country code followed by space or digit
+      if (trimmed.startsWith(actualCode + ' ') || trimmed === actualCode) {
         return {
           countryCode: country.value,
           number: trimmed.slice(actualCode.length).trim()
@@ -80,8 +88,8 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       }
     }
     
-    // If no country code found, assume it's Nepal local number
-    return { countryCode: '+977', number: trimmed };
+    // If no country code found, treat entire string as the number without country code
+    return { countryCode: '+977', number: trimmed.replace(/^\+\d+\s*/, '') };
   };
 
   const { countryCode, number } = parsePhoneNumber(value);
@@ -135,3 +143,4 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     </div>
   );
 };
+

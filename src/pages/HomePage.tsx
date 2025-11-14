@@ -4,26 +4,26 @@ import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 animate-bounce-in">
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
             Build Your Perfect{' '}
-            <span className="text-primary animate-pulse">Resume</span>
+            <span className="text-blue-600">Resume</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed animate-fade-in-up delay-300">
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
             Create professional resumes with AI-powered suggestions, beautiful templates, 
             and instant PDF export. Stand out from the crowd with Resumate.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-in-right delay-500">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/start">
-              <Button size="lg" className="text-lg px-8 py-6 hover:scale-105 hover:shadow-lg transition-all duration-300 group">
-                Start Building <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Button size="lg" className="text-lg px-8 py-6 hover:shadow-lg transition group">
+                Start Building <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition" />
               </Button>
             </Link>
             <Link to="/templates">
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6 hover:scale-105 hover:shadow-md transition-all duration-300">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6 hover:shadow-md transition">
                 View Templates
               </Button>
             </Link>
@@ -33,50 +33,50 @@ export default function HomePage() {
 
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16 animate-fade-in-up">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Why Choose Resumate?
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-gray-600">
             Powerful features to help you create the perfect resume
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-card p-8 rounded-lg shadow-lg text-center border hover:shadow-xl hover:scale-105 transition-all duration-300 animate-scale-in delay-100">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-6 animate-float">
-              <Sparkles className="h-8 w-8 text-primary" />
+          <div className="bg-white p-8 rounded-lg shadow-md text-center border hover:shadow-lg transition">
+            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-2xl font-semibold text-card-foreground mb-4">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               AI-Powered Suggestions
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-gray-600">
               Get intelligent recommendations for content, formatting, and improvements 
               to make your resume stand out to employers.
             </p>
           </div>
 
-          <div className="bg-card p-8 rounded-lg shadow-lg text-center border hover:shadow-xl hover:scale-105 transition-all duration-300 animate-scale-in delay-300">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-6 animate-float delay-200">
-              <FileText className="h-8 w-8 text-primary" />
+          <div className="bg-white p-8 rounded-lg shadow-md text-center border hover:shadow-lg transition">
+            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-6">
+              <FileText className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-2xl font-semibold text-card-foreground mb-4">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Professional Templates
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-gray-600">
               Choose from dozens of professionally designed templates. 
               Modern, classic, creative - find the perfect style for your industry.
             </p>
           </div>
 
-          <div className="bg-card p-8 rounded-lg shadow-lg text-center border hover:shadow-xl hover:scale-105 transition-all duration-300 animate-scale-in delay-500">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-6 animate-float delay-400">
-              <Download className="h-8 w-8 text-primary" />
+          <div className="bg-white p-8 rounded-lg shadow-md text-center border hover:shadow-lg transition">
+            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-6">
+              <Download className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-2xl font-semibold text-card-foreground mb-4">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Multiple Export Formats
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-gray-600">
               Download your resume as PDF, Word document, or print-ready format. 
               Perfect formatting guaranteed across all platforms.
             </p>
@@ -104,3 +104,4 @@ export default function HomePage() {
     </div>
   );
 }
+

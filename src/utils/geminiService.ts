@@ -1,7 +1,6 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-// Gemini configuration
-const DEFAULT_MODEL = 'gemini-1.5-flash'; // Updated model name
+// OpenRouter API setup
+const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const DEFAULT_MODEL = 'meta-llama/llama-3.1-8b-instruct:free'; // free tier model
 
 export interface GeminiRequest {
   prompt: string;
@@ -21,124 +20,95 @@ export interface GeminiStatus {
 }
 
 class GeminiService {
-  private genAI: GoogleGenerativeAI | null = null;
-  private model: any = null;
   private apiKey: string | null = null;
 
   constructor() {
     this.apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    console.log('Gemini API Key loaded:', this.apiKey ? `Yes (${this.apiKey.substring(0, 10)}...)` : 'No');
+    // just checking if key is loaded properly
+    console.log('OpenRouter API Key loaded:', this.apiKey ? `Yes (${this.apiKey.substring(0, 10)}...)` : 'No');
     
     if (this.apiKey) {
-      try {
-        this.genAI = new GoogleGenerativeAI(this.apiKey);
-        this.model = this.genAI.getGenerativeModel({ 
-          model: DEFAULT_MODEL,
-          generationConfig: {
-            temperature: 0.7,
-            topK: 1,
-            topP: 1,
-            maxOutputTokens: 2048,
-          }
-        });
-        console.log('Gemini AI initialized successfully');
-      } catch (error) {
-        console.error('Failed to initialize Gemini AI:', error);
-      }
+      console.log('OpenRouter API initialized successfully');
     } else {
       console.error('VITE_GEMINI_API_KEY environment variable not found');
     }
   }
 
-  /**
-   * Check if Gemini AI is configured and available
-   */
+  // Check API status
   async checkStatus(): Promise<GeminiStatus> {
     if (!this.apiKey) {
       return {
         available: false,
-        message: 'Gemini API key not configured. Please add VITE_GEMINI_API_KEY to your .env.local file.'
+        message: 'OpenRouter API key not configured. Please add VITE_GEMINI_API_KEY to your .env.local file.'
       };
     }
 
-    if (!this.genAI || !this.model) {
-      return {
-        available: false,
-        message: 'Failed to initialize Gemini AI. Please check your API key.'
-      };
-    }
-
-    // Don't make test API calls during status check to avoid errors
-    // Just return that it's configured if we have API key and model
     return {
       available: true,
       model: DEFAULT_MODEL,
-      message: 'Gemini AI is configured'
+      message: 'OpenRouter API is configured'
     };
   }
 
-  /**
-   * Generate text using Gemini AI
-   */
+  // Main text generation function
   async generateText(request: GeminiRequest): Promise<GeminiResponse> {
-    console.log('Gemini generateText called with:', { hasApiKey: !!this.apiKey, hasModel: !!this.model });
+    console.log('OpenRouter generateText called with:', { hasApiKey: !!this.apiKey });
     
     if (!this.apiKey) {
-      console.error('Gemini API key not found');
+      console.warn('OpenRouter API key not configured - AI features disabled');
       return {
-        response: 'Gemini AI is not configured. Please add your API key to .env.local',
-        success: false
-      };
-    }
-
-    if (!this.model) {
-      console.error('Gemini model not initialized');
-      return {
-        response: 'Gemini AI model failed to initialize',
+        response: 'AI features are currently unavailable. Please configure your API key in .env.local or continue building your CV manually.',
         success: false
       };
     }
 
     try {
-      // Configure generation parameters
-      if (request.temperature !== undefined || request.maxOutputTokens !== undefined) {
-        this.model = this.genAI!.getGenerativeModel({ 
+      console.log('Making OpenRouter API call with prompt length:', request.prompt.length);
+      
+      const response = await fetch(OPENROUTER_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'Resumate CV Builder'
+        },
+        body: JSON.stringify({
           model: DEFAULT_MODEL,
-          generationConfig: {
-            temperature: request.temperature || 0.7,
-            topK: 1,
-            topP: 1,
-            maxOutputTokens: request.maxOutputTokens || 2048,
-          }
-        });
+          messages: [
+            {
+              role: 'user',
+              content: request.prompt
+            }
+          ],
+          temperature: request.temperature || 0.7,
+          max_tokens: request.maxOutputTokens || 2048
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.warn('OpenRouter API error:', errorData);
+        return {
+          response: 'AI service temporarily unavailable. Please try again later or continue manually.',
+          success: false
+        };
       }
 
-      console.log('Making Gemini API call with prompt length:', request.prompt.length);
-      const result = await this.model.generateContent(request.prompt);
-      const response = await result.response;
-      const text = response.text();
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content || '';
 
-      console.log('Gemini API call successful, response length:', text.length);
+      console.log('OpenRouter API call successful, response length:', text.length);
       return {
         response: text,
         success: true
       };
     } catch (error: any) {
-      console.error('Gemini generation error:', error);
+      console.warn('OpenRouter generation error:', error);
       
-      // Provide user-friendly error messages
-      let errorMessage = 'Failed to generate content with Gemini AI';
-      
-      if (error.message?.includes('API key')) {
-        errorMessage = 'Invalid Gemini API key. Please check your configuration.';
-      } else if (error.message?.includes('quota') || error.message?.includes('limit')) {
-        errorMessage = 'Gemini API quota exceeded. Please try again later.';
-      } else if (error.message?.includes('400')) {
-        errorMessage = 'Invalid request to Gemini API. Please check your API key configuration.';
-      }
-      
+      // Return friendly message instead of showing technical errors
       return {
-        response: errorMessage,
+        response: 'AI features are currently unavailable. You can continue building your CV manually - all core features work without AI assistance.',
         success: false
       };
     }
@@ -148,19 +118,38 @@ class GeminiService {
    * Generate streaming response (for future use)
    */
   async *generateStream(request: GeminiRequest): AsyncGenerator<string, void, unknown> {
-    if (!this.model) {
-      yield 'Error: Gemini AI not initialized';
+    if (!this.apiKey) {
+      yield 'Error: OpenRouter API not initialized';
       return;
     }
 
     try {
-      const result = await this.model.generateContentStream(request.prompt);
-      
-      for await (const chunk of result.stream) {
-        const chunkText = chunk.text();
-        if (chunkText) {
-          yield chunkText;
-        }
+      const response = await fetch(OPENROUTER_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'Resumate CV Builder'
+        },
+        body: JSON.stringify({
+          model: DEFAULT_MODEL,
+          messages: [{ role: 'user', content: request.prompt }],
+          temperature: request.temperature || 0.7,
+          max_tokens: request.maxOutputTokens || 2048,
+          stream: true
+        })
+      });
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No response body');
+
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        yield chunk;
       }
     } catch (error: any) {
       yield `Error: ${error.message || 'Unknown error'}`;
@@ -172,9 +161,11 @@ class GeminiService {
    */
   getAvailableModels(): string[] {
     return [
-      'gemini-1.5-flash',
-      'gemini-1.5-pro',
-      'gemini-pro'
+      'google/gemini-pro',
+      'google/gemini-flash-1.5',
+      'google/gemini-pro-1.5',
+      'openai/gpt-3.5-turbo',
+      'openai/gpt-4'
     ];
   }
 
@@ -193,3 +184,6 @@ export const geminiService = new GeminiService();
 export const checkGeminiSetup = async (): Promise<GeminiStatus> => {
   return await geminiService.checkStatus();
 };
+
+// Note: This service now uses OpenRouter API
+// Your API key should be in the format: sk-or-v1-...

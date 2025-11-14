@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { SortableList } from '@/components/ui/sortable-list';
 
@@ -46,12 +47,13 @@ import { useCVContext } from '@/context/CVContext';
 import { exportToWord, type TemplateStyle } from '@/utils/exportUtils';
 import { LaTeXExportButton } from '@/components/ui/latex-export-button';
 import { ExportDialog } from '@/components/ui/export-dialog';
-import { AIProfessionalSummary } from '@/components/ui/ai-professional-summary';
 import { generateAIContent, validateCVContent } from '@/utils/aiUtils';
 import type { AIValidationResult, AIGenerationOptions } from '@/utils/aiUtils';
 import { GeminiStatusIndicator } from '@/components/GeminiStatusIndicator';
+import { TemplateSelection } from '@/components/ui/template-selection';
+import { CV_TEMPLATES } from '@/utils/cvTemplates';
 
-type Section = 'personal' | 'experience' | 'education' | 'skills' | 'languages' | 'awards' | 'insights';
+type Section = 'personal' | 'experience' | 'education' | 'skills' | 'languages' | 'awards' | 'insights' | 'template';
 
 const sections = [
   { id: 'personal' as Section, title: 'Personal Info', icon: User },
@@ -60,6 +62,7 @@ const sections = [
   { id: 'skills' as Section, title: 'Skills', icon: Code },
   { id: 'languages' as Section, title: 'Languages', icon: Languages },
   { id: 'awards' as Section, title: 'Awards', icon: Award },
+  { id: 'template' as Section, title: 'Choose Template', icon: FileText },
   { id: 'insights' as Section, title: 'AI Insights', icon: Sparkles },
 ];
 
@@ -249,6 +252,7 @@ export default function CVBuilderPage() {
   // CV Analyzer state
   const [mode, setMode] = useState<'builder' | 'analyzer' | null>(null);
   const [modeSelected, setModeSelected] = useState(false);
+  const [showTemplateSelection, setShowTemplateSelection] = useState(false);
   const [showBuilderForm, setShowBuilderForm] = useState(false);
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [showAnalysisResults, setShowAnalysisResults] = useState(false);
@@ -786,12 +790,12 @@ export default function CVBuilderPage() {
     setModeSelected(true);
     if (selectedMode === 'analyzer') {
       // For analyzer mode, keep existing behavior
+      setShowTemplateSelection(false);
       setShowBuilderForm(false);
     } else {
-      // For builder mode, show form immediately and navigate to first section
-      setShowBuilderForm(true);
-      // Navigate to the personal section when "Build from Scratch" is selected
-      navigateToSection('personal');
+      // For builder mode, show template selection first
+      setShowTemplateSelection(true);
+      setShowBuilderForm(false);
     }
     
     // Enhanced auto-scroll to the content after mode selection
@@ -806,7 +810,25 @@ export default function CVBuilderPage() {
     }, 150); // Slight delay for content to render
   };
 
-
+  const handleTemplateSelected = (template: TemplateStyle) => {
+    setSelectedTemplate(template);
+    sessionStorage.setItem('selectedTemplate', template);
+    setShowTemplateSelection(false);
+    setShowBuilderForm(true);
+    // Navigate to the personal section when template is selected
+    navigateToSection('personal');
+    
+    // Scroll to form
+    scrollTimeoutRef.current = window.setTimeout(() => {
+      const builderForm = document.querySelector('.builder-form-area');
+      if (builderForm) {
+        smoothScrollTo(builderForm, { 
+          block: 'start',
+          behavior: 'smooth'
+        });
+      }
+    }, 150);
+  };
 
   const handleUploadNew = () => {
     setShowAnalysisResults(false);
@@ -1496,7 +1518,7 @@ export default function CVBuilderPage() {
         <Button 
           onClick={handleNextSection} 
           disabled={isDisabled}
-          className={`flex items-center fib-gap-4 w-full sm:w-auto min-h-[48px] text-base font-semibold transition-all duration-300 ${
+          className={`flex items-center gap-4 w-full sm:w-auto min-h-[48px] text-base font-semibold transition-all duration-300 ${
             isDisabled 
               ? 'opacity-50 cursor-not-allowed bg-gray-300 ' 
               : isLastSection
@@ -1519,7 +1541,7 @@ export default function CVBuilderPage() {
     if (!error) return null;
     
     return (
-      <div className="flex items-start fib-gap-3 fib-m-3 fib-p-4 bg-red-50  rounded-lg border border-red-200 ">
+      <div className="flex items-start gap-3 mx-1 p-3 bg-red-50  rounded-lg border border-red-200 ">
         <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
         <span className="text-sm text-red-700  font-medium">{error}</span>
       </div>
@@ -1541,10 +1563,10 @@ export default function CVBuilderPage() {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 fib-gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <button
                 onClick={() => handleModeSelection('builder')}
-                className={`group relative fib-p-9 rounded-2xl border-2 transition-all duration-500 text-left hover:scale-105 ${
+                className={`group relative p-8 rounded-2xl border-2 transition-all duration-500 text-left hover:scale-105 ${
                   mode === 'builder'
                     ? 'border-purple-400 gradient-card shadow-glow'
                     : 'border-border hover:border-purple-300 hover:shadow-lg bg-card hover:gradient-card'
@@ -1557,17 +1579,8 @@ export default function CVBuilderPage() {
                 
                 <div>
                   <div className="flex items-center gap-5 mb-5">
-                    <div className={`p-4 rounded-2xl transition-all duration-300 ${
-                      mode === 'builder' 
-                        ? 'gradient-primary text-white shadow-glow' 
-                        : 'bg-secondary text-secondary-foreground group-hover:gradient-primary group-hover:text-white group-hover:shadow-glow'
-                    }`}>
-                      <FileText className="h-7 w-7" />
-                    </div>
                     <div>
-                      <h3 className="font-bold text-xl text-gradient group-hover:text-gradient transition-colors">
-                        Build from Scratch
-                      </h3>
+                      <h3 className="font-bold text-xl text-gradient group-hover:text-gradient transition-colors">Build from Scratch</h3>
                       <div className={`h-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded transition-all duration-500 ${
                         mode === 'builder' ? 'w-full' : 'w-0 group-hover:w-full'
                       }`}></div>
@@ -1581,7 +1594,7 @@ export default function CVBuilderPage() {
 
               <button
                 onClick={() => handleModeSelection('analyzer')}
-                className={`group relative fib-p-9 rounded-2xl border-2 transition-all duration-500 text-left hover:scale-105 ${
+                className={`group relative p-8 rounded-2xl border-2 transition-all duration-500 text-left hover:scale-105 ${
                   mode === 'analyzer'
                     ? 'border-emerald-400 gradient-card shadow-glow'
                     : 'border-border hover:border-emerald-300 hover:shadow-lg bg-card hover:gradient-card'
@@ -1593,18 +1606,9 @@ export default function CVBuilderPage() {
                 )}
                 
                 <div>
-                  <div className="flex items-center fib-gap-6 fib-m-6">
-                    <div className={`fib-p-6 rounded-2xl transition-all duration-300 ${
-                      mode === 'analyzer' 
-                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-glow' 
-                        : 'bg-secondary text-secondary-foreground group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-500 group-hover:text-white group-hover:shadow-glow'
-                    }`}>
-                      <Sparkles className="h-7 w-7" />
-                    </div>
+                  <div className="flex items-center gap-6 m-6">
                     <div>
-                      <h3 className="font-bold text-xl text-gradient group-hover:text-gradient transition-colors">
-                        Improve Existing CV
-                      </h3>
+                      <h3 className="font-bold text-xl text-gradient group-hover:text-gradient transition-colors">Improve Existing CV</h3>
                       <div className={`h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded transition-all duration-500 ${
                         mode === 'analyzer' ? 'w-full' : 'w-0 group-hover:w-full'
                       }`}></div>
@@ -1649,7 +1653,24 @@ export default function CVBuilderPage() {
                   <CVUploader onFileAnalyzed={handleAnalysisComplete} />
                 )}
               </>
-            ) : (
+            ) : showTemplateSelection ? (
+              <Card className="gradient-card border-0 shadow-glow">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold text-gradient">
+                    Choose Your CV Template
+                  </CardTitle>
+                  <p className="text-base text-muted-foreground mt-3">
+                    Select a professional template that matches your industry and career level
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <TemplateSelection
+                    selectedTemplate={selectedTemplate}
+                    onSelectTemplate={handleTemplateSelected}
+                  />
+                </CardContent>
+              </Card>
+            ) : showBuilderForm ? (
               <div className="builder-form-area focus-scroll space-y-4">
         {/* Name Fields - Single Row */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -1758,9 +1779,6 @@ export default function CVBuilderPage() {
             <FieldError error={getFieldError('website', state.personalInfo.website)} />
           </div>
         </div>
-
-        {/* AI-Powered Professional Summary Generator */}
-        <AIProfessionalSummary />
 
       <div className="space-y-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -1949,10 +1967,9 @@ export default function CVBuilderPage() {
           </Card>
         )}
         
-
-                </div>
+      </div>
               </div>
-            )}
+            ) : null}
           </div>
         )}
       </div>
@@ -2405,6 +2422,36 @@ export default function CVBuilderPage() {
     </div>
   );
 
+  const renderTemplateSection = () => {
+    const handleTemplateChange = (template: TemplateStyle) => {
+      setSelectedTemplate(template);
+      sessionStorage.setItem('selectedTemplate', template);
+    };
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Choose Your CV Template</h3>
+          <Badge variant="outline" className="capitalize">
+            {selectedTemplate.replace('-', ' ')}
+          </Badge>
+        </div>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-muted-foreground mb-6">
+              Select a template that matches your industry and career level. Each template is optimized for Applicant Tracking Systems (ATS).
+            </p>
+            <TemplateSelection
+              selectedTemplate={selectedTemplate}
+              onSelectTemplate={handleTemplateChange}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   const renderInsightsSection = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -2565,6 +2612,8 @@ export default function CVBuilderPage() {
         return renderLanguagesSection();
       case 'awards':
         return renderAwardsSection();
+      case 'template':
+        return renderTemplateSection();
       case 'insights':
         return renderInsightsSection();
       default:
@@ -2705,7 +2754,16 @@ export default function CVBuilderPage() {
                   <CardContent className="p-2 sm:p-4">
                     <div 
                       ref={previewRef}
-                      className="h-[400px] sm:h-[600px] xl:h-[800px] overflow-auto border border-gray-200  rounded-lg bg-white cv-preview-container"
+                      className="h-[400px] sm:h-[600px] xl:h-[800px] overflow-auto border rounded-lg bg-white cv-preview-container"
+                      style={{
+                        borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                        scrollBehavior: 'auto', // Override smooth scrolling for preview
+                        scrollbarWidth: 'thin', // Better scrollbar appearance
+                        scrollbarColor: 'rgba(0, 0, 0, 0.3) transparent',
+                        isolation: 'isolate', // Create new stacking context
+                        containIntrinsicSize: '1px 1000px', // Contain layout
+                        contain: 'layout style paint' // Full CSS containment
+                      }}
                       onMouseEnter={(e) => {
                         setIsPreviewHovered(true);
                         e.stopPropagation();
@@ -2746,19 +2804,23 @@ export default function CVBuilderPage() {
                           setPreviewManualScroll(true);
                         }
                       }}
-                      style={{
-                        scrollBehavior: 'auto', // Override smooth scrolling for preview
-                        scrollbarWidth: 'thin', // Better scrollbar appearance
-                        scrollbarColor: 'rgba(0, 0, 0, 0.3) transparent',
-                        isolation: 'isolate', // Create new stacking context
-                        containIntrinsicSize: '1px 1000px', // Contain layout
-                        contain: 'layout style paint' // Full CSS containment
-                      }}
                     >
-                      <div className="p-3 sm:p-4 xl:p-6 max-w-full mx-auto text-gray-900 text-xs sm:text-sm" style={{ fontSize: 'clamp(10px, 2vw, 12px)' }}>
+                      <div className="p-3 sm:p-4 xl:p-6 max-w-full mx-auto text-xs sm:text-sm" 
+                        style={{ 
+                          fontSize: 'clamp(10px, 2vw, 12px)',
+                          fontFamily: CV_TEMPLATES[selectedTemplate].fonts.body,
+                          color: CV_TEMPLATES[selectedTemplate].colors.text,
+                          lineHeight: CV_TEMPLATES[selectedTemplate].layout.lineHeight
+                        }}>
                         {/* Header - Personal Info */}
-                        <div className="preview-personal text-center mb-6 sm:mb-8 pb-4 sm:pb-6 border-b-2 border-gray-800">
-                          <h1 className="text-lg sm:text-xl font-bold mb-1">
+                        <div className="preview-personal text-center mb-6 sm:mb-8 pb-4 sm:pb-6 border-b-2" 
+                          style={{ borderColor: CV_TEMPLATES[selectedTemplate].colors.heading }}>
+                          <h1 className="text-lg sm:text-xl font-bold mb-1"
+                            style={{
+                              fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                              color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                              fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.name
+                            }}>
                             {state.personalInfo.firstName || 'Your Name'} {state.personalInfo.lastName}
                           </h1>
                       {state.personalInfo.title && (
@@ -2774,7 +2836,7 @@ export default function CVBuilderPage() {
                         {state.personalInfo.phone && (
                           <span className="flex items-center gap-1">
                             <Phone className="h-3 w-3" />
-                            {state.personalInfo.countryCode} {state.personalInfo.phone}
+                            {state.personalInfo.phone}
                           </span>
                         )}
                         {state.personalInfo.location && (
@@ -2795,7 +2857,13 @@ export default function CVBuilderPage() {
                     {/* Summary - Part of Personal Section */}
                     {state.personalInfo.summary && (
                       <div className="mb-8 pt-4">
-                        <h2 className="text-sm font-bold mb-2 border-b border-gray-400 pb-1">
+                        <h2 className="text-sm font-bold mb-2 border-b pb-1"
+                          style={{
+                            fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                            color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                            borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                            fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.heading
+                          }}>
                           Professional Summary
                         </h2>
                         <p className="text-xs leading-relaxed">{state.personalInfo.summary}</p>
@@ -2804,8 +2872,14 @@ export default function CVBuilderPage() {
 
                     {/* Experience */}
                     {state.experience.length > 0 && (
-                      <div className="preview-experience mb-8 pt-6 border-t border-gray-300">
-                        <h2 className="text-sm font-bold mb-2 border-b border-gray-400 pb-1">
+                      <div className="preview-experience mb-8 pt-6 border-t" style={{ borderColor: CV_TEMPLATES[selectedTemplate].colors.border }}>
+                        <h2 className="text-sm font-bold mb-2 border-b pb-1"
+                          style={{
+                            fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                            color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                            borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                            fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.heading
+                          }}>
                           Work Experience
                         </h2>
                         <div className="space-y-3">
@@ -2834,8 +2908,14 @@ export default function CVBuilderPage() {
 
                     {/* Education */}
                     {state.education.length > 0 && (
-                      <div className="preview-education mb-8 pt-6 border-t border-gray-300">
-                        <h2 className="text-sm font-bold mb-2 border-b border-gray-400 pb-1">
+                      <div className="preview-education mb-8 pt-6 border-t" style={{ borderColor: CV_TEMPLATES[selectedTemplate].colors.border }}>
+                        <h2 className="text-sm font-bold mb-2 border-b pb-1"
+                          style={{
+                            fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                            color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                            borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                            fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.heading
+                          }}>
                           Education
                         </h2>
                         <div className="space-y-3">
@@ -2864,8 +2944,14 @@ export default function CVBuilderPage() {
 
                     {/* Skills */}
                     {state.skills.length > 0 && (
-                      <div className="preview-skills mb-8 pt-6 border-t border-gray-300">
-                        <h2 className="text-sm font-bold mb-2 border-b border-gray-400 pb-1">
+                      <div className="preview-skills mb-8 pt-6 border-t" style={{ borderColor: CV_TEMPLATES[selectedTemplate].colors.border }}>
+                        <h2 className="text-sm font-bold mb-2 border-b pb-1"
+                          style={{
+                            fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                            color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                            borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                            fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.heading
+                          }}>
                           Skills
                         </h2>
                         <div className="space-y-2">
@@ -2892,8 +2978,14 @@ export default function CVBuilderPage() {
 
                     {/* Languages */}
                     {state.languages.length > 0 && (
-                      <div className="preview-languages mb-8 pt-6 border-t border-gray-300">
-                        <h2 className="text-sm font-bold mb-2 border-b border-gray-400 pb-1">
+                      <div className="preview-languages mb-8 pt-6 border-t" style={{ borderColor: CV_TEMPLATES[selectedTemplate].colors.border }}>
+                        <h2 className="text-sm font-bold mb-2 border-b pb-1"
+                          style={{
+                            fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                            color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                            borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                            fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.heading
+                          }}>
                           Languages
                         </h2>
                         <div className="ml-3">
@@ -2908,8 +3000,14 @@ export default function CVBuilderPage() {
 
                     {/* Awards */}
                     {state.awards.length > 0 && (
-                      <div className="preview-certifications mb-8 pt-6 border-t border-gray-300">
-                        <h2 className="text-sm font-bold mb-2 border-b border-gray-400 pb-1">
+                      <div className="preview-certifications mb-8 pt-6 border-t" style={{ borderColor: CV_TEMPLATES[selectedTemplate].colors.border }}>
+                        <h2 className="text-sm font-bold mb-2 border-b pb-1"
+                          style={{
+                            fontFamily: CV_TEMPLATES[selectedTemplate].fonts.heading,
+                            color: CV_TEMPLATES[selectedTemplate].colors.heading,
+                            borderColor: CV_TEMPLATES[selectedTemplate].colors.border,
+                            fontSize: CV_TEMPLATES[selectedTemplate].fonts.size.heading
+                          }}>
                           Awards & Achievements
                         </h2>
                         <div className="space-y-3">
@@ -3006,3 +3104,4 @@ export default function CVBuilderPage() {
     </div>
   );
 }
+

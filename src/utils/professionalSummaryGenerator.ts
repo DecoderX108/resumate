@@ -62,7 +62,7 @@ export class ProfessionalSummaryGenerator {
 
       if (!response.success) {
         return {
-          summary: 'Failed to generate AI summary. Please try again.',
+          summary: response.response, // Return the actual error message from Gemini
           success: false
         };
       }
@@ -78,8 +78,9 @@ export class ProfessionalSummaryGenerator {
 
     } catch (error) {
       console.error('Error generating professional summary:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
       return {
-        summary: 'An error occurred while generating your professional summary. Please try again.',
+        summary: `Error: ${errorMsg}`,
         success: false
       };
     }

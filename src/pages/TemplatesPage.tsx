@@ -5,21 +5,181 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Star, Eye, Download, X, Heart, Share2, Award, TrendingUp, CheckCircle, Zap } from 'lucide-react';
-import { mockTemplates } from '../utils/template-data';
-import type { Template } from '../utils/template-data';
+import { CV_TEMPLATES, type TemplateStyle } from '@/utils/cvTemplates';
 
-const categories = ['All', 'Professional', 'Creative', 'Executive', 'Academic', 'Healthcare', 'Sales', 'Finance'];
+// Template data structure
+interface ExtendedTemplate {
+  id: TemplateStyle;
+  name: string;
+  description: string;
+  category: string;
+  atsScore: number;
+  jobSuccessRate: number;
+  interviewRate: number;
+  downloads: number;
+  rating: number;
+  isATSFriendly: boolean;
+  isPremium: boolean;
+  tags: string[];
+  popularIndustries: string[];
+  features: string[];
+  preview: string;
+}
+
+// Available templates with their info
+const templates: ExtendedTemplate[] = [
+  {
+    id: 'ats-friendly',
+    name: CV_TEMPLATES['ats-friendly'].name,
+    description: CV_TEMPLATES['ats-friendly'].description,
+    category: 'Professional',
+    atsScore: CV_TEMPLATES['ats-friendly'].atsScore,
+    jobSuccessRate: 92,
+    interviewRate: 78,
+    downloads: 15420,
+    rating: 4.9,
+    isATSFriendly: true,
+    isPremium: false,
+    tags: ['ats', 'professional', 'clean', 'simple'],
+    popularIndustries: ['Technology', 'Finance', 'Healthcare', 'Consulting'],
+    features: [
+      'Maximum ATS compatibility',
+      'Clean section headers',
+      'Standard fonts for parsing',
+      'Optimized keyword placement',
+      'Simple, professional layout'
+    ],
+    preview: '/template-previews/ats-friendly.png'
+  },
+  {
+    id: 'professional',
+    name: CV_TEMPLATES['professional'].name,
+    description: CV_TEMPLATES['professional'].description,
+    category: 'Professional',
+    atsScore: CV_TEMPLATES['professional'].atsScore,
+    jobSuccessRate: 88,
+    interviewRate: 75,
+    downloads: 12350,
+    rating: 4.8,
+    isATSFriendly: true,
+    isPremium: false,
+    tags: ['professional', 'corporate', 'traditional', 'classic'],
+    popularIndustries: ['Corporate', 'Finance', 'Legal', 'Consulting'],
+    features: [
+      'Traditional corporate design',
+      'Professional color scheme',
+      'Serif heading fonts',
+      'ATS-friendly structure',
+      'Balanced white space'
+    ],
+    preview: '/template-previews/professional.png'
+  },
+  {
+    id: 'academic',
+    name: CV_TEMPLATES['academic'].name,
+    description: CV_TEMPLATES['academic'].description,
+    category: 'Academic',
+    atsScore: CV_TEMPLATES['academic'].atsScore,
+    jobSuccessRate: 85,
+    interviewRate: 72,
+    downloads: 8920,
+    rating: 4.7,
+    isATSFriendly: true,
+    isPremium: false,
+    tags: ['academic', 'research', 'education', 'scholarly'],
+    popularIndustries: ['Education', 'Research', 'Academia', 'Science'],
+    features: [
+      'Academic-focused sections',
+      'Publication & research emphasis',
+      'Traditional scholarly format',
+      'Detailed work history layout',
+      'References section included'
+    ],
+    preview: '/template-previews/academic.png'
+  },
+  {
+    id: 'modern',
+    name: CV_TEMPLATES['modern'].name,
+    description: CV_TEMPLATES['modern'].description,
+    category: 'Creative',
+    atsScore: CV_TEMPLATES['modern'].atsScore,
+    jobSuccessRate: 82,
+    interviewRate: 80,
+    downloads: 18750,
+    rating: 4.8,
+    isATSFriendly: true,
+    isPremium: false,
+    tags: ['modern', 'creative', 'colorful', 'tech', 'startup'],
+    popularIndustries: ['Technology', 'Startups', 'Design', 'Marketing'],
+    features: [
+      'Contemporary design aesthetic',
+      'Subtle color accents',
+      'Modern typography',
+      'Tech-industry optimized',
+      'Visual hierarchy emphasis'
+    ],
+    preview: '/template-previews/modern.png'
+  },
+  {
+    id: 'executive',
+    name: CV_TEMPLATES['executive'].name,
+    description: CV_TEMPLATES['executive'].description,
+    category: 'Executive',
+    atsScore: CV_TEMPLATES['executive'].atsScore,
+    jobSuccessRate: 90,
+    interviewRate: 82,
+    downloads: 9840,
+    rating: 4.9,
+    isATSFriendly: true,
+    isPremium: true,
+    tags: ['executive', 'senior', 'leadership', 'c-level'],
+    popularIndustries: ['Executive Leadership', 'Management', 'C-Suite', 'Board'],
+    features: [
+      'Executive summary emphasis',
+      'Leadership achievements focus',
+      'Sophisticated color palette',
+      'Board & advisor sections',
+      'Premium professional design'
+    ],
+    preview: '/template-previews/executive.png'
+  },
+  {
+    id: 'creative',
+    name: CV_TEMPLATES['creative'].name,
+    description: CV_TEMPLATES['creative'].description,
+    category: 'Creative',
+    atsScore: CV_TEMPLATES['creative'].atsScore,
+    jobSuccessRate: 78,
+    interviewRate: 85,
+    downloads: 22150,
+    rating: 4.6,
+    isATSFriendly: false,
+    isPremium: true,
+    tags: ['creative', 'design', 'artistic', 'portfolio', 'visual'],
+    popularIndustries: ['Design', 'Creative', 'Arts', 'Media', 'Advertising'],
+    features: [
+      'Bold creative design',
+      'Unique visual layout',
+      'Portfolio showcase ready',
+      'Eye-catching color scheme',
+      'Creative industry optimized'
+    ],
+    preview: '/template-previews/creative.png'
+  }
+];
+
+const categories = ['All', 'Professional', 'Creative', 'Executive', 'Academic'];
 
 export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('jobSuccess');
-  const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<ExtendedTemplate | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [showOnlyATS, setShowOnlyATS] = useState(false);
 
-  const filteredTemplates = mockTemplates.filter(template => {
+  const filteredTemplates = templates.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -174,7 +334,7 @@ export default function TemplatesPage() {
             <div className="flex flex-wrap gap-3 pt-6 border-t border-border/50">
               <Badge className="px-4 py-2 text-sm font-semibold gradient-primary text-white border-0 shadow-md">
                 <CheckCircle className="w-4 h-4 mr-2" />
-                {mockTemplates.filter(t => t.isATSFriendly).length} ATS-Friendly Templates
+                {templates.filter(t => t.isATSFriendly).length} ATS-Friendly Templates
               </Badge>
               <Badge className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 shadow-md">
                 <Search className="w-4 h-4 mr-2" />
@@ -182,7 +342,7 @@ export default function TemplatesPage() {
               </Badge>
               <Badge className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-gray-500 to-gray-600 text-white border-0 shadow-md">
                 <TrendingUp className="w-4 h-4 mr-2" />
-                Avg Success: {Math.round(mockTemplates.reduce((acc, t) => acc + t.jobSuccessRate, 0) / mockTemplates.length)}%
+                Avg Success: {Math.round(templates.reduce((acc, t) => acc + t.jobSuccessRate, 0) / templates.length)}%
               </Badge>
             </div>
           </CardContent>
@@ -225,12 +385,37 @@ export default function TemplatesPage() {
               </button>
 
               <CardHeader className="pb-3">
-                <div className="aspect-[3/4] bg-gray-100 rounded-lg mb-4 overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                  <img
-                    src={template.preview}
-                    alt={template.name}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="aspect-[3/4] rounded-lg mb-4 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative"
+                  style={{
+                    background: `linear-gradient(135deg, ${CV_TEMPLATES[template.id as TemplateStyle].colors.primary}15 0%, ${CV_TEMPLATES[template.id as TemplateStyle].colors.secondary}15 100%)`,
+                    border: `2px solid ${CV_TEMPLATES[template.id as TemplateStyle].colors.border}`
+                  }}
+                >
+                  <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center">
+                    <div className="w-full h-3 rounded mb-3" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.heading }}></div>
+                    <div className="w-3/4 h-2 rounded mb-2" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.secondary + '40' }}></div>
+                    <div className="w-3/4 h-2 rounded mb-6" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.secondary + '40' }}></div>
+                    
+                    <div className="w-full space-y-3">
+                      <div className="w-1/3 h-2 rounded" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.primary }}></div>
+                      <div className="space-y-1">
+                        <div className="w-full h-1.5 rounded" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.text + '30' }}></div>
+                        <div className="w-5/6 h-1.5 rounded" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.text + '30' }}></div>
+                        <div className="w-4/5 h-1.5 rounded" style={{ backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.text + '30' }}></div>
+                      </div>
+                    </div>
+
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <div className="text-xs font-medium text-center p-2 rounded" 
+                        style={{ 
+                          backgroundColor: CV_TEMPLATES[template.id as TemplateStyle].colors.primary,
+                          color: 'white',
+                          fontFamily: CV_TEMPLATES[template.id as TemplateStyle].fonts.heading
+                        }}>
+                        {template.name}
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
                 <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
@@ -334,12 +519,37 @@ export default function TemplatesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Template Preview */}
                   <div>
-                    <div className="aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden mb-4">
-                      <img
-                        src={previewTemplate.preview}
-                        alt={previewTemplate.name}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative"
+                      style={{
+                        background: `linear-gradient(135deg, ${CV_TEMPLATES[previewTemplate.id].colors.primary}15 0%, ${CV_TEMPLATES[previewTemplate.id].colors.secondary}15 100%)`,
+                        border: `2px solid ${CV_TEMPLATES[previewTemplate.id].colors.border}`
+                      }}
+                    >
+                      <div className="absolute inset-0 flex flex-col justify-center items-center p-8 text-center">
+                        <div className="w-full h-4 rounded mb-4" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.heading }}></div>
+                        <div className="w-3/4 h-3 rounded mb-2" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.secondary + '40' }}></div>
+                        <div className="w-3/4 h-3 rounded mb-8" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.secondary + '40' }}></div>
+                        
+                        <div className="w-full space-y-4">
+                          <div className="w-1/3 h-3 rounded" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.primary }}></div>
+                          <div className="space-y-2">
+                            <div className="w-full h-2 rounded" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.text + '30' }}></div>
+                            <div className="w-5/6 h-2 rounded" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.text + '30' }}></div>
+                            <div className="w-4/5 h-2 rounded" style={{ backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.text + '30' }}></div>
+                          </div>
+                        </div>
+
+                        <div className="absolute bottom-8 left-8 right-8">
+                          <div className="text-sm font-semibold text-center p-3 rounded" 
+                            style={{ 
+                              backgroundColor: CV_TEMPLATES[previewTemplate.id].colors.primary,
+                              color: 'white',
+                              fontFamily: CV_TEMPLATES[previewTemplate.id].fonts.heading
+                            }}>
+                            {previewTemplate.name} Preview
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -465,3 +675,4 @@ export default function TemplatesPage() {
     </div>
   );
 }
+

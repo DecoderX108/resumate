@@ -25,7 +25,7 @@ export interface AIValidationResult {
   improvements: string[];
 }
 
-// AI Content Generation Templates
+// Different summary templates based on experience
 const SUMMARY_TEMPLATES = {
   entry: [
     "Recent graduate with a strong foundation in {field} and passion for {industry}. Eager to apply theoretical knowledge in practical settings while contributing to innovative projects and continuous learning.",

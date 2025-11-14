@@ -50,16 +50,6 @@ export function LaTeXExportButton({ className }: LaTeXExportButtonProps) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex gap-2 items-center">
-        <select
-          value={latexTemplate}
-          onChange={(e) => setLatexTemplate(e.target.value)}
-          className="px-3 py-1 border rounded text-sm"
-        >
-          <option value="modern">Modern Professional</option>
-          <option value="academic">Academic</option>
-          <option value="creative">Creative</option>
-        </select>
-        
         <Button
           onClick={handleLatexExport}
           disabled={isExporting}
@@ -74,11 +64,6 @@ export function LaTeXExportButton({ className }: LaTeXExportButtonProps) {
           )}
           {isExporting ? 'Generating...' : '          Export PDF'}
         </Button>
-      </div>
-      
-      <div className="text-xs text-gray-600">
-        <p>🚀 <strong>Professional PDF</strong>: High-quality typography and layout</p>
-        <p>✨ LaTeX-powered document generation</p>
       </div>
     </div>
   );

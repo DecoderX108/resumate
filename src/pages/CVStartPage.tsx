@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Sparkles, ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { CV_TEMPLATES, type TemplateStyle } from '@/utils/cvTemplates';
 import { Badge } from '@/components/ui/badge';
 
@@ -16,7 +16,9 @@ export default function CVStartPage() {
   const handleContinue = () => {
     // Store the selected template and mode in sessionStorage
     sessionStorage.setItem('buildMode', buildMode || 'scratch');
-    sessionStorage.setItem('selectedTemplate', selectedTemplate);
+    if (buildMode === 'improve') {
+      sessionStorage.setItem('selectedTemplate', selectedTemplate);
+    }
     navigate('/builder');
   };
 
@@ -39,15 +41,15 @@ export default function CVStartPage() {
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Build from Scratch */}
               <Card 
-                className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary"
-                onClick={() => setBuildMode('scratch')}
+                className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary h-full"
+                onClick={() => {
+                  setBuildMode('scratch');
+                  navigate('/builder');
+                }}
               >
-                <CardHeader className="text-center">
-                  <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <FileText className="h-10 w-10 text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl text-primary">Build from Scratch</CardTitle>
-                  <CardDescription className="text-base pt-2">
+                <CardHeader className="text-center h-full flex flex-col justify-center py-12">
+                  <CardTitle className="text-2xl text-primary mb-2">Build from Scratch</CardTitle>
+                  <CardDescription className="text-base">
                     Create a new CV step by step with our intuitive builder and AI assistance
                   </CardDescription>
                 </CardHeader>
@@ -55,15 +57,12 @@ export default function CVStartPage() {
 
               {/* Improve Existing CV */}
               <Card 
-                className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary"
+                className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary h-full"
                 onClick={() => setBuildMode('improve')}
               >
-                <CardHeader className="text-center">
-                  <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="h-10 w-10 text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl text-primary">Improve Existing CV</CardTitle>
-                  <CardDescription className="text-base pt-2">
+                <CardHeader className="text-center h-full flex flex-col justify-center py-12">
+                  <CardTitle className="text-2xl text-primary mb-2">Improve Existing CV</CardTitle>
+                  <CardDescription className="text-base">
                     Upload your current CV and get AI-powered analysis and improvement suggestions
                   </CardDescription>
                 </CardHeader>
@@ -190,3 +189,4 @@ export default function CVStartPage() {
     </div>
   );
 }
+

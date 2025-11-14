@@ -1,16 +1,7 @@
-/**
- * Resumate - AI-Powered Resume Builder
- * 
- * PROPRIETARY SOFTWARE - ALL RIGHTS RESERVED
- * Copyright © 2025 Resumate. All Rights Reserved.
- * 
- * This software is proprietary and confidential.
- * Unauthorized copying, distribution, or use is strictly prohibited.
- * 
- * Source-available software - Free for non-commercial use.
- * Commercial license required for business use. Contact: etherjoon@gmail.com
- * GitHub: https://github.com/DecoderX108/resumate
- */
+// Resumate - Resume Builder Application
+// Created for academic project
+// Feel free to use for learning purposes
+// For any questions: etherjoon@gmail.com
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CVProvider } from '@/context/CVContext';
@@ -31,9 +22,9 @@ function App() {
     <AuthProvider>
       <CVProvider>
         <Router>
-          <div className="min-h-screen flex flex-col">
+          <div className="min-h-screen flex flex-col bg-slate-50">
             <Header />
-            <main className="flex-1">
+            <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/templates" element={<TemplatesPage />} />
@@ -54,3 +45,4 @@ function App() {
 }
 
 export default App;
+

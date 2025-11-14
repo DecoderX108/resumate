@@ -3,9 +3,8 @@
   "private": false,
   "version": "1.0.0",
   "type": "module",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "author": "Resumate",
-  "description": "AI-Powered CV Builder - Free for non-commercial use, commercial license required for business use",
+  "author": "etherjoon@gmail.com",
+  "description": "Modern CV Builder with React and TypeScript - Academic Project",
   "repository": {
     "type": "git",
     "url": "https://github.com/resumate/resumate"
@@ -15,11 +14,9 @@
     "resume",
     "cv",
     "builder",
-    "ai",
     "react",
     "typescript",
-    "source-available",
-    "non-commercial"
+    "academic-project"
   ],
   "scripts": {
     "dev": "vite",

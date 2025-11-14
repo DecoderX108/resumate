@@ -23,7 +23,7 @@ export const LICENSE_INFO = {
 export const displayLicenseWarning = () => {
   if (typeof window !== 'undefined' && import.meta.env.DEV) {
     console.log(
-      `%c📖 Source-Available Software - Free for Non-Commercial Use`,
+      `%cResumate - Free for Non-Commercial Use`,
       'color: #3b82f6; font-size: 16px; font-weight: bold; padding: 10px; border: 2px solid #3b82f6; border-radius: 5px;'
     );
     console.log(

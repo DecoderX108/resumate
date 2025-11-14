@@ -1,76 +1,30 @@
-# Resumate - AI-Powered Resume Builder
+# Resumate - Resume Builder
 
-> **📖 SOURCE-AVAILABLE - FREE FOR NON-COMMERCIAL USE**
->
-> Copyright © 2025 Resumate. All Rights Reserved.
->
-> ✅ **FREE** for personal, educational, and non-commercial projects  
-> 💰 **Commercial license required** for business/revenue-generating use
->
-> 📧 Contact: etherjoon@gmail.com
->
-> 🔗 GitHub: https://github.com/DecoderX108/resumate
+A modern CV/Resume builder built with React and TypeScript. Created as an academic project with AI-powered features.
+
+## About This Project
+
+This is a student project for learning purposes. Feel free to use it for your own resumes!
+
+📧 Contact: etherjoon@gmail.com  
+🔗 GitHub: https://github.com/DecoderX108/resumate
 
 ---
 
-A modern, professional CV/Resume builder application built with React, TypeScript, and Vite. Features AI-powered content generation using Ollama (Local LLM), beautiful templates, and multiple export formats.
+## Features
 
-## � LICENSE INFORMATION
+### Professional CV Templates
 
-### ✅ **FREE for Non-Commercial Use**
+6 different professional templates to choose from:
 
-You can **freely use, view, and modify** this software for:
+- ATS-Friendly Professional - Works with most ATS systems
+- Classic Professional - Traditional corporate style
+- Academic CV - For research and academic positions
+- Modern Professional - Contemporary design
+- Executive Leadership - For senior positions
+- Creative Professional - Design-focused
 
-- 📚 **Personal projects** - Create your own resume
-- 🎓 **Learning & education** - Study the code, learn React/TypeScript
-- 💼 **Portfolio projects** - Showcase in your portfolio
-- 🔬 **Research** - Academic and non-commercial research
-- 🎨 **Experimentation** - Try new features and modifications
-
-**Requirements:**
-
-- Keep copyright notices intact
-- Give credit to Resumate in your project
-- Link back to this repository
-- Don't use commercially without a license
-
-### 💰 **Commercial License Required For:**
-
-You **MUST purchase a license** if you want to:
-
-- ❌ Sell resume building services to clients
-- ❌ Charge users for CV creation
-- ❌ Use in commercial products or services
-- ❌ Offer as SaaS or subscription service
-- ❌ White-label for clients or businesses
-- ❌ Generate revenue from the software
-- ❌ Use in freelance/client projects
-
-### 📋 Commercial License Options:
-
-1. **Freelancer License** - Independent contractors ($99/year)
-2. **Business License** - Companies up to 10 users ($499/year)
-3. **Enterprise License** - Unlimited users + priority support (Custom)
-4. **White-Label/OEM** - Rebrand and resell rights (Custom)
-
-**Get a commercial license:** etherjoon@gmail.com
-
----
-
-## 🚀 Features
-
-### 🎨 **Professional CV Templates**
-
-**6 Industry-Standard Templates** inspired by 120+ real professional CVs:
-
-- **ATS-Friendly Professional** (98% ATS score) - Maximum compatibility
-- **Classic Professional** (95% ATS score) - Traditional corporate
-- **Academic CV** (92% ATS score) - Research and academic positions
-- **Modern Professional** (90% ATS score) - Contemporary companies
-- **Executive Leadership** (93% ATS score) - C-suite and senior roles
-- **Creative Professional** (85% ATS score) - Design and creative industries
-
-**Features:**
+All templates support:
 
 - Template selector with preview and ATS scores
 - Export to Word (.doc) format with proper formatting
