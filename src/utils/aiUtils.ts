@@ -115,77 +115,129 @@ const createCVPrompts = (section: string, context: any): string => {
 
   switch (section) {
     case 'summary':
-      return `Write a professional CV summary for a ${role} in the ${industry} industry. 
-Experience: ${experience || 'Not specified'}
+      return `You are a professional CV writer. Write a compelling professional summary for this candidate:
+
+Job Title: ${role}
+Industry: ${industry}
+Experience Level: ${experience || 'Not specified'}
 Key Skills: ${skills || 'Not specified'}
 Major Achievement: ${achievements || 'Not specified'}
 Career Goals: ${goals || 'Not specified'}
 
-Requirements:
-- 2-3 sentences maximum
-- Professional tone
-- Highlight key strengths
-- No generic phrases
-- Include specific skills mentioned
-- Make it compelling for recruiters
+IMPORTANT REQUIREMENTS:
+- Write exactly 3-4 sentences (80-120 words)
+- Start with a strong opening that states the candidate's role and experience level
+- Include specific skills and technologies mentioned
+- Highlight the major achievement with impact/results
+- End with career goals or value proposition
+- Use active voice and powerful action verbs
+- Be specific, not generic
+- No bullet points, just flowing paragraphs
+- Professional yet engaging tone
 
-Professional Summary:`;
+Write ONLY the professional summary, no extra text or labels:
+
+`;
 
     case 'experience':
-      return `Generate 3-4 professional bullet points for a ${role} job description. 
+      return `You are a professional CV writer. Generate impressive job responsibilities and achievements for this position:
+
+Job Title: ${role}
 Industry: ${industry}
-Key Skills: ${skills || 'Not specified'}
+Key Skills Used: ${skills || 'Not specified'}
 Major Achievement: ${achievements || 'Not specified'}
 
-Requirements:
-- Start each bullet with an action verb
-- Include specific metrics where possible (use realistic percentages/numbers)
-- Focus on achievements and impact
-- Use technical terminology appropriately
-- Keep each bullet under 20 words
+IMPORTANT REQUIREMENTS:
+- Generate exactly 4-5 bullet points
+- Start EACH bullet point with a strong action verb (Led, Developed, Implemented, Managed, Designed, etc.)
+- Include specific metrics, percentages, or numbers where realistic
+- Show progression from responsibilities to achievements
+- Use technical terminology appropriate for ${industry}
+- Each bullet should be 15-25 words
+- Focus on IMPACT and RESULTS, not just tasks
+- Use past tense for completed work
 
-Job Responsibilities:`;
+Examples of good bullets:
+• Developed scalable microservices architecture serving 50K+ daily users, reducing API response time by 40%
+• Led cross-functional team of 8 engineers in agile development, delivering 95% of sprint commitments on schedule
+• Implemented automated CI/CD pipeline using Jenkins and Docker, reducing deployment time from 2 hours to 15 minutes
+
+Write ONLY the bullet points, no extra text:
+
+`;
 
     case 'education':
-      return `Generate an education description for a ${role} focusing on relevant coursework.
+      return `You are a professional CV writer. Generate compelling education details for this candidate:
+
+Target Role: ${role}
 Industry: ${industry}
-Skills: ${skills || 'Not specified'}
+Relevant Skills: ${skills || 'Not specified'}
 
-Requirements:
-- Focus on relevant coursework for the industry
-- Include 2-3 key projects or achievements
-- Mention relevant technologies or methodologies
-- Keep it concise and professional
+IMPORTANT REQUIREMENTS:
+- Write 2-3 concise sentences about the education
+- Include relevant coursework or specializations for ${role}
+- Mention 1-2 significant academic projects or achievements
+- Include relevant technologies, frameworks, or methodologies learned
+- Keep it focused and professional
+- No generic statements
 
-Education Details:`;
+Examples:
+For Software Engineer: "Focused on software engineering principles, data structures, and algorithm design. Completed capstone project developing a full-stack e-commerce platform using React and Node.js, achieving 99.5% uptime. Coursework included: Advanced Database Systems, Cloud Computing, and Machine Learning."
+
+Write ONLY the education description, no extra text:
+
+`;
 
     case 'skills':
-      return `Generate a skills section for a ${role} in ${industry}.
+      return `You are a professional CV writer. Generate a comprehensive skills list for this role:
+
+Target Role: ${role}
+Industry: ${industry}
 Current Skills: ${skills || 'Not specified'}
 Experience Level: ${experience || 'Not specified'}
 
-Requirements:
-- Categorize skills (Technical, Leadership, Tools, etc.)
-- Include both hard and soft skills
-- Be specific with technology names
-- Match industry standards
-- Include 8-12 total skills
+IMPORTANT REQUIREMENTS:
+- Generate 10-15 skills total
+- Categorize into: Technical Skills, Soft Skills, Tools & Platforms
+- Include both hard skills and soft skills
+- Be specific with technology names and versions where appropriate
+- Match industry standards for ${industry}
+- Order by relevance to the role
 
-Skills:`;
+Format as simple comma-separated list:
+Technical: JavaScript, React, Node.js, Python, SQL, REST APIs
+Soft Skills: Leadership, Problem Solving, Team Collaboration
+Tools: Git, Docker, AWS, Jira
+
+Write ONLY the skills list:
+
+`;
 
     case 'achievement':
-      return `Generate a professional achievement for a ${role} in ${industry}.
+      return `You are a professional CV writer. Generate an impressive achievement statement:
+
+Role: ${role}
+Industry: ${industry}
 Background: ${achievements || experience || 'Not specified'}
 Skills Used: ${skills || 'Not specified'}
 
-Requirements:
-- Include specific metrics or results
-- Start with an action verb
-- Show clear impact/benefit
-- Keep under 25 words
-- Make it quantifiable where possible
+IMPORTANT REQUIREMENTS:
+- Write ONE powerful achievement bullet point
+- Start with a strong action verb (Spearheaded, Architected, Drove, Delivered, etc.)
+- Include specific, quantifiable metrics (percentages, dollar amounts, time saved, users impacted)
+- Show clear business impact or benefit
+- Maximum 30 words
+- Use past tense
+- Be specific, not vague
 
-Achievement:`;
+Examples of excellent achievements:
+• Spearheaded migration to cloud infrastructure, reducing operational costs by $120K annually while improving system reliability to 99.99% uptime
+• Architected and launched mobile application that acquired 100K+ users in first 3 months, generating $250K in revenue
+• Led digital transformation initiative that increased team productivity by 35% and reduced project delivery time from 8 weeks to 5 weeks
+
+Write ONLY the achievement bullet point:
+
+`;
 
     default:
       return `Generate professional content for the ${section} section of a CV for a ${role} in ${industry}.

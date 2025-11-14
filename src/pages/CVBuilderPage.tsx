@@ -854,22 +854,55 @@ export default function CVBuilderPage() {
     setTimeout(scrollChatToBottom, 200);
   };
 
+  // Normalize user input for better AI processing
+  const normalizeResponse = (questionId: string, response: string): string => {
+    const trimmed = response.trim();
+    
+    // Handle experience years normalization
+    if (questionId === 'experience') {
+      // Check if response is just a number
+      const numMatch = trimmed.match(/^(\d+)$/);
+      if (numMatch) {
+        const years = parseInt(numMatch[1]);
+        if (years === 0) return 'Less than 1 year';
+        if (years === 1) return '1 year';
+        return `${years} years`;
+      }
+      
+      // Check if it's a number without 'year(s)'
+      const partialMatch = trimmed.match(/^(\d+)\s*\+?\s*$/i);
+      if (partialMatch) {
+        const years = parseInt(partialMatch[1]);
+        if (years === 1) return '1 year';
+        return `${years}+ years`;
+      }
+      
+      // If it contains 'entry' or 'fresher', normalize
+      if (/entry|fresher|beginner|graduate/i.test(trimmed)) {
+        return 'Entry level (0-1 years)';
+      }
+    }
+    
+    return trimmed;
+  };
+  
   const handleChatResponse = (response: string) => {
     if (!response.trim()) return;
 
     const currentQuestion = summaryQuestions[currentQuestionIndex];
-    const newUserResponse = { ...userResponses, [currentQuestion.id]: response };
+    const normalizedResponse = normalizeResponse(currentQuestion.id, response);
+    const newUserResponse = { ...userResponses, [currentQuestion.id]: normalizedResponse };
     setUserResponses(newUserResponse);
 
     // Update personal info if we're getting the role
     if (currentQuestion.id === 'role') {
-      handlePersonalInfoChange('title', response);
+      handlePersonalInfoChange('title', normalizedResponse);
     }
 
-    // Add user message
+    // Add user message (show normalized response)
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
-      text: response,
+      text: normalizedResponse,
       isBot: false,
       timestamp: new Date()
     };
